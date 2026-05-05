@@ -45,7 +45,7 @@ install_manifest.txt
 *.exp
 
 # Generated reports and run outputs
-reports/
+data/reports/reports/
 *.log
 logs/
 *.tmp
@@ -92,3 +92,5 @@ yarn-error.log*
 *.tgz
 *.7z
 *.rar
+
+AGENTS.md
