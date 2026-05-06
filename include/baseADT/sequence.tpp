@@ -1,5 +1,33 @@
 #include <stdexcept>
 #include "sequence.h"
+#include "array_sequence.h"
+
+template <class TFirst, class TSecond>
+Pair<TFirst, TSecond>::Pair() : first_value(), second_value() {}
+
+template <class TFirst, class TSecond>
+Pair<TFirst, TSecond>::Pair(const TFirst &first, const TSecond &second)
+    : first_value(first), second_value(second) {}
+
+template <class TFirst, class TSecond>
+const TFirst& Pair<TFirst, TSecond>::first() const {
+  return first_value;
+}
+
+template <class TFirst, class TSecond>
+const TSecond& Pair<TFirst, TSecond>::second() const {
+  return second_value;
+}
+
+template <class TFirst, class TSecond>
+bool Pair<TFirst, TSecond>::operator==(const Pair<TFirst, TSecond> &other) const {
+  return first_value == other.first_value && second_value == other.second_value;
+}
+
+template <class TFirst, class TSecond>
+bool Pair<TFirst, TSecond>::operator!=(const Pair<TFirst, TSecond> &other) const {
+  return !(*this == other);
+}
 
 /*
  * Если создать последовательно размером миллион и взять элемент с 900000 до 900001, то нынешний алгоритм
@@ -87,12 +115,34 @@ Sequence<T>* Sequence<T>::map(T (*func)(const T &item, int index)) const {
   return result;
 }
 
-//template <class T, class T2>
-//Sequence<T2>* Sequence<T>::map(T2 (*func)(const T &item)) const {
-//  if (func == nullptr) throw std::invalid_argument("Нельзя выполнить map с нулевой функцией");
-//
-//
-//}
+template <class T>
+Sequence<T>* Sequence<T>::map(T (*func)(const T &item, const T &parameter), const T &parameter) const {
+  if (func == nullptr) throw std::invalid_argument("Нельзя выполнить map с нулевой функцией");
+
+  Sequence<T>* result = new_empty_instance();
+  EnumeratorWrapper<T> iter = get_enumerator();
+
+  while (iter.move_next()) {
+    result->sys_append(func(iter.get_current(), parameter));
+  }
+
+  return result;
+}
+
+template <class T>
+template <class T2>
+Sequence<T2>* Sequence<T>::map(T2 (*func)(const T &item)) const {
+  if (func == nullptr) throw std::invalid_argument("Нельзя выполнить map с нулевой функцией");
+
+  Sequence<T2>* result = new MutableArraySequence<T2>();
+  EnumeratorWrapper<T> iter = get_enumerator();
+
+  while (iter.move_next()) {
+    result->append(func(iter.get_current()));
+  }
+
+  return result;
+}
 
 template <class T>
 Sequence<T>* Sequence<T>::where(bool (*predicate)(const T &element)) const {
@@ -121,6 +171,20 @@ T Sequence<T>::reduce(T (*func)(const T &accumulator, const T &current), const T
 
   while (iter.move_next()) {
     result = func(result, iter.get_current());
+  }
+
+  return result;
+}
+
+template <class TFirst, class TSecond>
+Sequence<Pair<TFirst, TSecond>>* zip(const Sequence<TFirst> &first, const Sequence<TSecond> &second) {
+  Sequence<Pair<TFirst, TSecond>>* result = new MutableArraySequence<Pair<TFirst, TSecond>>();
+
+  EnumeratorWrapper<TFirst> first_iter = first.get_enumerator();
+  EnumeratorWrapper<TSecond> second_iter = second.get_enumerator();
+
+  while (first_iter.move_next() && second_iter.move_next()) {
+    result->append(Pair<TFirst, TSecond>(first_iter.get_current(), second_iter.get_current()));
   }
 
   return result;
