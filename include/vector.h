@@ -20,6 +20,7 @@ protected:
   virtual Vector<T>* create_from_sequence(Sequence<T>* sequence) const;
 
 public:
+  Vector();
   Vector(Sequence<T>* seq);
   Vector(const T* items, int count);
   Vector(const Vector<T>& other);
