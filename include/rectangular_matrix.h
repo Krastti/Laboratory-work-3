@@ -2,25 +2,23 @@
 #define LABORATORYWORK3_RECTANGULAR_MATRIX_H
 
 #include "matrix.h"
+#include "baseADT/array_sequence.h"
 
 template <class T>
 class RectangularMatrix : public Matrix<T> {
 private:
-  Vector<T>** rows;
+  MutableArraySequence<Vector<T>> rows;
   int row_count;
   int column_count;
 
   void check_size(int rows_count, int columns_count) const;
   void check_index(int row, int column) const;
 
-  Vector<T>* create_row_from_array(const T* source_elements, int count, int row) const;
-  Vector<T>* create_row_from_sequence(const Sequence<T>& sequence, int row) const;
+  Vector<T> create_row_from_array(const T* source_elements, int count, int row) const;
+  Vector<T> create_row_from_sequence(const Sequence<T>& sequence, int row) const;
 
   void initialize_rows_from_array(const T* source_elements, int count);
   void initialize_rows_from_sequence(const Sequence<T>& sequence);
-
-  Vector<T>** clone_rows(const RectangularMatrix<T>& other) const;
-  void release_rows();
 
 protected:
   Matrix<T>* create_empty(int rows_count, int columns_count) const override;
