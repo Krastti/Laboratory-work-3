@@ -7,6 +7,16 @@
 #include "baseADT/array_sequence.h"
 
 template <class T>
+T vector_sum_pair(const Pair<T, T>& pair) {
+  return pair.first() + pair.second();
+}
+
+template <class T>
+T vector_multiply_item(const T& item, const T& scalar) {
+  return item * scalar;
+}
+
+template <class T>
 void Vector<T>::check_index(int index) const {
   if (index < 0) throw std::out_of_range("Индекс вне допустимого диапазона");
   if (index >= dimension) throw std::out_of_range("Индекс вне допустимого диапазона");
@@ -109,13 +119,20 @@ template <class T>
 Vector<T>* Vector<T>::sum(const Vector<T>& other) const {
   check_dimension(other);
 
-  Sequence<T>* sequence = new MutableArraySequence<T>();
+  Sequence<Pair<T, T>>* zipped = zip(*coordinates, *other.coordinates);
+  Sequence<T>* sequence = nullptr;
+  Vector<T>* result = nullptr;
 
-  for (int i = 0; i < dimension; i++) {
-    sequence->append(get(i) + other.get(i));
+  try {
+    sequence = zipped->map(vector_sum_pair<T>);
+    result = create_from_sequence(sequence);
+  } catch (...) {
+    delete zipped;
+    delete sequence;
+    throw;
   }
 
-  Vector<T>* result = create_from_sequence(sequence);
+  delete zipped;
   delete sequence;
 
   return result;
@@ -123,13 +140,17 @@ Vector<T>* Vector<T>::sum(const Vector<T>& other) const {
 
 template <class T>
 Vector<T>* Vector<T>::multiply_by_scalar(const T& scalar) const {
-  Sequence<T>* sequence = new MutableArraySequence<T>();
+  Sequence<T>* sequence = nullptr;
+  Vector<T>* result = nullptr;
 
-  for (int i = 0; i < dimension; i++) {
-    sequence->append(get(i) * scalar);
+  try {
+    sequence = coordinates->map(vector_multiply_item<T>, scalar);
+    result = create_from_sequence(sequence);
+  } catch (...) {
+    delete sequence;
+    throw;
   }
 
-  Vector<T>* result = create_from_sequence(sequence);
   delete sequence;
 
   return result;
