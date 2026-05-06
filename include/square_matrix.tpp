@@ -17,7 +17,7 @@ void SquareMatrix<T>::check_index(int row, int column) const {
 }
 
 template <class T>
-Vector<T>* SquareMatrix<T>::create_row_from_array(const T* source_elements, int count, int row) const {
+Vector<T> SquareMatrix<T>::create_row_from_array(const T* source_elements, int count, int row) const {
   Sequence<T>* sequence = new MutableArraySequence<T>();
   int first_index = row * size;
 
@@ -26,22 +26,18 @@ Vector<T>* SquareMatrix<T>::create_row_from_array(const T* source_elements, int 
     sequence->append(source_index < count ? source_elements[source_index] : T());
   }
 
-  Vector<T>* result = nullptr;
-
   try {
-    result = new Vector<T>(sequence);
+    Vector<T> result(sequence);
+    delete sequence;
+    return result;
   } catch (...) {
     delete sequence;
     throw;
   }
-
-  delete sequence;
-
-  return result;
 }
 
 template <class T>
-Vector<T>* SquareMatrix<T>::create_row_from_sequence(const Sequence<T>& sequence, int row) const {
+Vector<T> SquareMatrix<T>::create_row_from_sequence(const Sequence<T>& sequence, int row) const {
   Sequence<T>* row_sequence = new MutableArraySequence<T>();
   int first_index = row * size;
   int count = sequence.get_length();
@@ -51,90 +47,28 @@ Vector<T>* SquareMatrix<T>::create_row_from_sequence(const Sequence<T>& sequence
     row_sequence->append(source_index < count ? sequence.get(source_index) : T());
   }
 
-  Vector<T>* result = nullptr;
-
   try {
-    result = new Vector<T>(row_sequence);
+    Vector<T> result(row_sequence);
+    delete row_sequence;
+    return result;
   } catch (...) {
     delete row_sequence;
     throw;
   }
-
-  delete row_sequence;
-
-  return result;
 }
 
 template <class T>
 void SquareMatrix<T>::initialize_rows_from_array(const T* source_elements, int count) {
-  rows = new Vector<T>*[size];
-
   for (int row = 0; row < size; row++) {
-    rows[row] = nullptr;
-  }
-
-  try {
-    for (int row = 0; row < size; row++) {
-      rows[row] = create_row_from_array(source_elements, count, row);
-    }
-  } catch (...) {
-    release_rows();
-    throw;
+    rows.append(create_row_from_array(source_elements, count, row));
   }
 }
 
 template <class T>
 void SquareMatrix<T>::initialize_rows_from_sequence(const Sequence<T>& sequence) {
-  rows = new Vector<T>*[size];
-
   for (int row = 0; row < size; row++) {
-    rows[row] = nullptr;
+    rows.append(create_row_from_sequence(sequence, row));
   }
-
-  try {
-    for (int row = 0; row < size; row++) {
-      rows[row] = create_row_from_sequence(sequence, row);
-    }
-  } catch (...) {
-    release_rows();
-    throw;
-  }
-}
-
-template <class T>
-Vector<T>** SquareMatrix<T>::clone_rows(const SquareMatrix<T>& other) const {
-  Vector<T>** new_rows = new Vector<T>*[other.size];
-
-  for (int row = 0; row < other.size; row++) {
-    new_rows[row] = nullptr;
-  }
-
-  try {
-    for (int row = 0; row < other.size; row++) {
-      new_rows[row] = new Vector<T>(*other.rows[row]);
-    }
-  } catch (...) {
-    for (int row = 0; row < other.size; row++) {
-      delete new_rows[row];
-    }
-
-    delete[] new_rows;
-    throw;
-  }
-
-  return new_rows;
-}
-
-template <class T>
-void SquareMatrix<T>::release_rows() {
-  if (rows == nullptr) return;
-
-  for (int row = 0; row < size; row++) {
-    delete rows[row];
-  }
-
-  delete[] rows;
-  rows = nullptr;
 }
 
 template <class T>
@@ -150,17 +84,17 @@ template <class T>
 void SquareMatrix<T>::set_item(int row, int column, const T& value) {
   check_index(row, column);
 
-  rows[row]->set(column, value);
+  rows[row].set(column, value);
 }
 
 template <class T>
-SquareMatrix<T>::SquareMatrix(int size) : rows(nullptr), size(size) {
+SquareMatrix<T>::SquareMatrix(int size) : rows(), size(size) {
   check_size(size);
   initialize_rows_from_array(nullptr, 0);
 }
 
 template <class T>
-SquareMatrix<T>::SquareMatrix(const T* source_elements, int size) : rows(nullptr), size(size) {
+SquareMatrix<T>::SquareMatrix(const T* source_elements, int size) : rows(), size(size) {
   check_size(size);
   if (source_elements == nullptr) throw std::invalid_argument("Cannot create matrix from null array");
 
@@ -168,7 +102,7 @@ SquareMatrix<T>::SquareMatrix(const T* source_elements, int size) : rows(nullptr
 }
 
 template <class T>
-SquareMatrix<T>::SquareMatrix(const T* source_elements, int count, int size) : rows(nullptr), size(size) {
+SquareMatrix<T>::SquareMatrix(const T* source_elements, int count, int size) : rows(), size(size) {
   check_size(size);
   if (source_elements == nullptr) throw std::invalid_argument("Cannot create matrix from null array");
   if (count < 0) throw std::out_of_range("Element count cannot be negative");
@@ -178,7 +112,7 @@ SquareMatrix<T>::SquareMatrix(const T* source_elements, int count, int size) : r
 }
 
 template <class T>
-SquareMatrix<T>::SquareMatrix(Sequence<T>* sequence, int size) : rows(nullptr), size(size) {
+SquareMatrix<T>::SquareMatrix(Sequence<T>* sequence, int size) : rows(), size(size) {
   check_size(size);
   if (sequence == nullptr) throw std::invalid_argument("Cannot create matrix from null sequence");
   if (sequence->get_length() > size * size) {
@@ -189,17 +123,13 @@ SquareMatrix<T>::SquareMatrix(Sequence<T>* sequence, int size) : rows(nullptr), 
 }
 
 template <class T>
-SquareMatrix<T>::SquareMatrix(const SquareMatrix<T>& other) : rows(nullptr), size(other.size) {
-  rows = clone_rows(other);
-}
+SquareMatrix<T>::SquareMatrix(const SquareMatrix<T>& other) : rows(other.rows), size(other.size) {}
 
 template <class T>
 SquareMatrix<T>& SquareMatrix<T>::operator=(const SquareMatrix<T>& other) {
   if (this == &other) return *this;
 
-  Vector<T>** new_rows = clone_rows(other);
-  release_rows();
-  rows = new_rows;
+  rows = other.rows;
   size = other.size;
 
   return *this;
@@ -250,10 +180,8 @@ template <class T>
 const T& SquareMatrix<T>::get(int row, int column) const {
   check_index(row, column);
 
-  return rows[row]->get(column);
+  return rows[row].get(column);
 }
 
 template <class T>
-SquareMatrix<T>::~SquareMatrix() {
-  release_rows();
-}
+SquareMatrix<T>::~SquareMatrix() {}
