@@ -35,6 +35,9 @@ Vector<T>* Vector<T>::create_from_sequence(Sequence<T>* sequence) const {
 }
 
 template <class T>
+Vector<T>::Vector() : coordinates(new MutableArraySequence<T>()), dimension(0) {}
+
+template <class T>
 Vector<T>::Vector(Sequence<T>* seq) : coordinates(nullptr), dimension(0) {
   if (seq == nullptr) throw std::invalid_argument("Нельзя создать вектор из нулевой последовательности");
   if (seq->get_length() == 0) throw std::invalid_argument("Нельзя создать вектор нулевой размерности");
