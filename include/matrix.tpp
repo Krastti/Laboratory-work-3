@@ -204,7 +204,7 @@ std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix) {
       out << '\n';
     }
 
-    out << '[';
+    out << '|';
 
     for (int column = 0; column < matrix.get_column_count(); column++) {
       if (column > 0) {
@@ -214,7 +214,7 @@ std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix) {
       out << matrix.get(row, column);
     }
 
-    out << ']';
+    out << '|';
   }
 
   out << '\n';
