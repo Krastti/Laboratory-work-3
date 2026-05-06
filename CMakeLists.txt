@@ -13,3 +13,11 @@ add_executable(LaboratoryWork3
 target_include_directories(LaboratoryWork3 PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
+add_executable(LaboratoryWork3Tests
+  tests/unit_tests.cpp
+)
+
+target_include_directories(LaboratoryWork3Tests PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
