@@ -67,8 +67,7 @@ Vector<T>::Vector(const T* items, int count) : coordinates(nullptr), dimension(0
 }
 
 template <class T>
-Vector<T>::Vector(const Vector<T>& other)
-    : coordinates(new MutableArraySequence<T>(*other.coordinates)), dimension(other.dimension) {}
+Vector<T>::Vector(const Vector<T>& other) : coordinates(new MutableArraySequence<T>(*other.coordinates)), dimension(other.dimension) {}
 
 template <class T>
 Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
