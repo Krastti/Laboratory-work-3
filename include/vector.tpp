@@ -117,6 +117,8 @@ int Vector<T>::get_dimension() const {
   return dimension;
 }
 
+
+// TODO Проверить, почему в текущей реализации данных функции - ошибки молча проглатываются
 template <class T>
 Vector<T>* Vector<T>::sum(const Vector<T>& other) const {
   check_dimension(other);
@@ -192,19 +194,49 @@ double Vector<T>::norm() const {
 }
 
 template <class T>
-Vector<T> Vector<T>::operator+(const Vector<T>& other) const {
+Vector<T>& Vector<T>::operator+=(const Vector<T>& other) {
   Vector<T>* result = sum(other);
-  Vector<T> value(*result);
+
+  try {
+    *this = *result;
+  } catch (...) {
+    delete result;
+    throw;
+  }
+
   delete result;
+
+  return *this;
+}
+
+template <class T>
+Vector<T>& Vector<T>::operator*=(const T& scalar) {
+  Vector<T>* result = multiply_by_scalar(scalar);
+
+  try {
+    *this = *result;
+  } catch (...) {
+    delete result;
+    throw;
+  }
+
+  delete result;
+
+  return *this;
+}
+
+template <class T>
+Vector<T> Vector<T>::operator+(const Vector<T>& other) const {
+  Vector<T> value(*this);
+  value += other;
 
   return value;
 }
 
 template <class T>
 Vector<T> Vector<T>::operator*(const T& scalar) const {
-  Vector<T>* result = multiply_by_scalar(scalar);
-  Vector<T> value(*result);
-  delete result;
+  Vector<T> value(*this);
+  value *= scalar;
 
   return value;
 }

@@ -35,11 +35,17 @@ public:
 
   int get_dimension() const;
 
+  /*
+   * Функции суммы и умножения на скаляр реализованы через map и zip
+   */
   virtual Vector<T>* sum(const Vector<T>& other) const;
   virtual Vector<T>* multiply_by_scalar(const T& scalar) const;
+
   T dot_product(const Vector<T>& other) const;
   double norm() const;
 
+  Vector<T>& operator+=(const Vector<T>& other);
+  Vector<T>& operator*=(const T& scalar);
   Vector<T> operator+(const Vector<T>& other) const;
   Vector<T> operator*(const T& scalar) const;
 
