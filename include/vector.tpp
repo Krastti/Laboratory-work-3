@@ -117,8 +117,6 @@ int Vector<T>::get_dimension() const {
   return dimension;
 }
 
-
-// TODO Проверить, почему в текущей реализации данных функции - ошибки молча проглатываются
 template <class T>
 Vector<T>* Vector<T>::sum(const Vector<T>& other) const {
   check_dimension(other);

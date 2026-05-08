@@ -33,6 +33,7 @@ public:
 
   virtual double norm() const;
 
+  // Функции элем. преобразований
   void swap_rows(int first_row, int second_row);
   void swap_columns(int first_column, int second_column);
   void scale_row(int row, const T& scalar);

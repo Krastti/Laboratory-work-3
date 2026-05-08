@@ -80,7 +80,7 @@ Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& other) {
   for (int row = 0; row < get_row_count(); row++) {
     Vector<T>* this_row = get_row(row);
     Vector<T>* other_row = other.get_row(row);
-    Vector<T>* result_row = this_row->sum(*other_row);
+    Vector<T>* result_row = this_row->sum(*other_row); // <- Реализация унарного оператора через фукнциональную зависимость
 
     for (int col = 0; col < get_column_count(); col++) {
       set_item(row, col, result_row->get(col));
@@ -98,7 +98,7 @@ template <class T>
 Matrix<T>& Matrix<T>::operator*=(const T& scalar) {
   for (int row = 0; row < get_row_count(); row++) {
     Vector<T>* this_row = get_row(row);
-    Vector<T>* result_row = this_row->multiply_by_scalar(scalar);
+    Vector<T>* result_row = this_row->multiply_by_scalar(scalar); // <- Аналогично тому, что выше
 
     for (int col = 0; col < get_column_count(); col++) {
       set_item(row, col, result_row->get(col));
