@@ -12,13 +12,6 @@ private:
   void check_index(int index) const;
   void check_dimension(const Vector<T>& other) const;
 
-protected:
-  /*
-   * Спросить, является ли название данной функции семантически верным.
-   * Функция является виртуальной фабрикой результатов. То есть f: Sequence<T> -> Vector<T>
-   */
-  virtual Vector<T>* create_from_sequence(Sequence<T>* sequence) const;
-
 public:
   Vector();
   Vector(Sequence<T>* seq);
@@ -35,12 +28,8 @@ public:
 
   int get_dimension() const;
 
-  /*
-   * Функции суммы и умножения на скаляр реализованы через map и zip
-   */
-  virtual Vector<T>* sum(const Vector<T>& other) const;
-  virtual Vector<T>* multiply_by_scalar(const T& scalar) const;
-
+  Vector<T>* sum(const Vector<T>& other) const;
+  Vector<T>* multiply_by_scalar(const T& scalar) const;
   T dot_product(const Vector<T>& other) const;
   double norm() const;
 
@@ -51,9 +40,6 @@ public:
 
   virtual ~Vector();
 };
-
-template <class T>
-std::ostream& operator<<(std::ostream& out, const Vector<T>& vector);
 
 #include "vector.tpp"
 

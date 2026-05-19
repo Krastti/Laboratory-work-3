@@ -1,20 +1,9 @@
 #include <cmath>
 #include <stdexcept>
-#include <ostream>
 
 #include "vector.h"
 #include "complex.h"
 #include "baseADT/array_sequence.h"
-
-template <class T>
-T vector_sum_pair(const Pair<T, T>& pair) {
-  return pair.first() + pair.second();
-}
-
-template <class T>
-T vector_multiply_item(const T& item, const T& scalar) {
-  return item * scalar;
-}
 
 template <class T>
 void Vector<T>::check_index(int index) const {
@@ -27,11 +16,6 @@ void Vector<T>::check_dimension(const Vector<T>& other) const {
   if (dimension != other.dimension) {
     throw std::invalid_argument("Размерности векторов не совпадают");
   }
-}
-
-template <class T>
-Vector<T>* Vector<T>::create_from_sequence(Sequence<T>* sequence) const {
-  return new Vector<T>(sequence);
 }
 
 template <class T>
@@ -119,43 +103,12 @@ int Vector<T>::get_dimension() const {
 
 template <class T>
 Vector<T>* Vector<T>::sum(const Vector<T>& other) const {
-  check_dimension(other);
-
-  Sequence<Pair<T, T>>* zipped = zip(*coordinates, *other.coordinates);
-  Sequence<T>* sequence = nullptr;
-  Vector<T>* result = nullptr;
-
-  try {
-    sequence = zipped->map(vector_sum_pair<T>);
-    result = create_from_sequence(sequence);
-  } catch (...) {
-    delete zipped;
-    delete sequence;
-    throw;
-  }
-
-  delete zipped;
-  delete sequence;
-
-  return result;
+  return new Vector<T>(*this + other);
 }
 
 template <class T>
 Vector<T>* Vector<T>::multiply_by_scalar(const T& scalar) const {
-  Sequence<T>* sequence = nullptr;
-  Vector<T>* result = nullptr;
-
-  try {
-    sequence = coordinates->map(vector_multiply_item<T>, scalar);
-    result = create_from_sequence(sequence);
-  } catch (...) {
-    delete sequence;
-    throw;
-  }
-
-  delete sequence;
-
-  return result;
+  return new Vector<T>(*this * scalar);
 }
 
 template <class T>
@@ -193,67 +146,38 @@ double Vector<T>::norm() const {
 
 template <class T>
 Vector<T>& Vector<T>::operator+=(const Vector<T>& other) {
-  Vector<T>* result = sum(other);
+  check_dimension(other);
 
-  try {
-    *this = *result;
-  } catch (...) {
-    delete result;
-    throw;
+  for (int index = 0; index < dimension; index++) {
+    (*coordinates)[index] = (*coordinates)[index] + other[index];
   }
-
-  delete result;
 
   return *this;
 }
 
 template <class T>
 Vector<T>& Vector<T>::operator*=(const T& scalar) {
-  Vector<T>* result = multiply_by_scalar(scalar);
-
-  try {
-    *this = *result;
-  } catch (...) {
-    delete result;
-    throw;
+  for (int index = 0; index < dimension; index++) {
+    (*coordinates)[index] = (*coordinates)[index] * scalar;
   }
-
-  delete result;
 
   return *this;
 }
 
 template <class T>
 Vector<T> Vector<T>::operator+(const Vector<T>& other) const {
-  Vector<T> value(*this);
-  value += other;
+  Vector<T> result(*this);
+  result += other;
 
-  return value;
+  return result;
 }
 
 template <class T>
 Vector<T> Vector<T>::operator*(const T& scalar) const {
-  Vector<T> value(*this);
-  value *= scalar;
+  Vector<T> result(*this);
+  result *= scalar;
 
-  return value;
-}
-
-template <class T>
-std::ostream& operator<<(std::ostream& out, const Vector<T>& vector) {
-  out << '[';
-
-  for (int i = 0; i < vector.get_dimension(); i++) {
-    if (i > 0) {
-      out << ", ";
-    }
-
-    out << vector[i];
-  }
-
-  out << ']';
-
-  return out;
+  return result;
 }
 
 template <class T>
