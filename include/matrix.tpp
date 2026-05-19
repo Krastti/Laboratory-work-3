@@ -1,6 +1,5 @@
 #include <cmath>
 #include <stdexcept>
-#include <ostream>
 #include "matrix.h"
 #include "complex.h"
 #include "baseADT/array_sequence.h"
@@ -197,27 +196,3 @@ void Matrix<T>::sum_column_to_column(int source_column, int target_column, const
   }
 }
 
-template <class T>
-std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix) {
-  for (int row = 0; row < matrix.get_row_count(); row++) {
-    if (row > 0) {
-      out << '\n';
-    }
-
-    out << '|';
-
-    for (int column = 0; column < matrix.get_column_count(); column++) {
-      if (column > 0) {
-        out << ", ";
-      }
-
-      out << matrix.get(row, column);
-    }
-
-    out << '|';
-  }
-
-  out << '\n';
-
-  return out;
-}

@@ -22,7 +22,7 @@ public:
   virtual const T& operator()(int row, int column) const;
 
   /*
-   * Данные функции возвращают указатель, поэтому необходимо при вывода разыменовывать его
+   * Данные функции возвращают указатель, поэтому необходимо при выводе разыменовывать его
    * Пример: std::cout << *matrix.get_row(0) << std::endl;
    */
   Vector<T>* get_row(int row) const;
@@ -43,9 +43,6 @@ public:
 
   virtual ~Matrix() {}
 };
-
-template <class T>
-std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix);
 
 #include "matrix.tpp"
 
