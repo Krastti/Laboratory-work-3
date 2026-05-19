@@ -2,14 +2,13 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
-#include <string>
 
+#include "../include/vector.h"
 #include "../include/complex.h"
 #include "../include/diagonal_matrix.h"
 #include "../include/rectangular_matrix.h"
 #include "../include/square_matrix.h"
 #include "../include/triangular_matrix.h"
-#include "../include/vector.h"
 
 const double EPSILON = 1e-9;
 
