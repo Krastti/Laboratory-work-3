@@ -30,7 +30,7 @@ void TriangularMatrix<T>::initialize_from_array(const T* source_elements, int co
   int storage_size = get_storage_size();
 
   for (int index = 0; index < storage_size; index++) {
-    elements[index] = index < count ? source_elements[index] : T();
+    elements.append(index < count ? source_elements[index] : T());
   }
 }
 
@@ -40,7 +40,7 @@ void TriangularMatrix<T>::initialize_from_sequence(const Sequence<T>& sequence) 
   int count = sequence.get_length();
 
   for (int index = 0; index < storage_size; index++) {
-    elements[index] = index < count ? sequence.get(index) : T();
+    elements.append(index < count ? sequence.get(index) : T());
   }
 }
 
@@ -69,24 +69,22 @@ void TriangularMatrix<T>::set_item(int row, int column, const T& value) {
 }
 
 template <class T>
-TriangularMatrix<T>::TriangularMatrix(int size) : elements(nullptr), size(size), zero(T()) {
+TriangularMatrix<T>::TriangularMatrix(int size) : elements(), size(size), zero(T()) {
   check_size(size);
 
-  elements = new T[get_storage_size()];
   initialize_from_array(nullptr, 0);
 }
 
 template <class T>
-TriangularMatrix<T>::TriangularMatrix(const T* source_elements, int size) : elements(nullptr), size(size), zero(T()) {
+TriangularMatrix<T>::TriangularMatrix(const T* source_elements, int size) : elements(), size(size), zero(T()) {
   check_size(size);
   if (source_elements == nullptr) throw std::invalid_argument("Cannot create matrix from null array");
 
-  elements = new T[get_storage_size()];
   initialize_from_array(source_elements, get_storage_size());
 }
 
 template <class T>
-TriangularMatrix<T>::TriangularMatrix(const T* source_elements, int count, int size) : elements(nullptr), size(size), zero(T()) {
+TriangularMatrix<T>::TriangularMatrix(const T* source_elements, int count, int size) : elements(), size(size), zero(T()) {
   check_size(size);
   if (source_elements == nullptr) throw std::invalid_argument("Cannot create matrix from null array");
   if (count < 0) throw std::out_of_range("Element count cannot be negative");
@@ -94,43 +92,29 @@ TriangularMatrix<T>::TriangularMatrix(const T* source_elements, int count, int s
     throw std::invalid_argument("Element count cannot be greater than matrix capacity");
   }
 
-  elements = new T[get_storage_size()];
   initialize_from_array(source_elements, count);
 }
 
 template <class T>
-TriangularMatrix<T>::TriangularMatrix(Sequence<T>* sequence, int size) : elements(nullptr), size(size), zero(T()) {
+TriangularMatrix<T>::TriangularMatrix(Sequence<T>* sequence, int size) : elements(), size(size), zero(T()) {
   check_size(size);
   if (sequence == nullptr) throw std::invalid_argument("Cannot create matrix from null sequence");
   if (sequence->get_length() > get_storage_size()) {
     throw std::invalid_argument("Sequence length cannot be greater than matrix capacity");
   }
 
-  elements = new T[get_storage_size()];
   initialize_from_sequence(*sequence);
 }
 
 template <class T>
-TriangularMatrix<T>::TriangularMatrix(const TriangularMatrix<T>& other) : elements(nullptr), size(other.size), zero(T()) {
-  elements = new T[get_storage_size()];
-
-  for (int index = 0; index < get_storage_size(); index++) {
-    elements[index] = other.elements[index];
-  }
-}
+TriangularMatrix<T>::TriangularMatrix(const TriangularMatrix<T>& other)
+  : elements(other.elements), size(other.size), zero(T()) {}
 
 template <class T>
 TriangularMatrix<T>& TriangularMatrix<T>::operator=(const TriangularMatrix<T>& other) {
   if (this == &other) return *this;
 
-  T* new_elements = new T[other.get_storage_size()];
-
-  for (int index = 0; index < other.get_storage_size(); index++) {
-    new_elements[index] = other.elements[index];
-  }
-
-  delete[] elements;
-  elements = new_elements;
+  elements = other.elements;
   size = other.size;
   zero = T();
 
@@ -191,5 +175,4 @@ const T& TriangularMatrix<T>::get(int row, int column) const {
 
 template <class T>
 TriangularMatrix<T>::~TriangularMatrix() {
-  delete[] elements;
 }

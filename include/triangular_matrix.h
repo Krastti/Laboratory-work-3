@@ -2,11 +2,12 @@
 #define LABORATORYWORK3_TRIANGULAR_MATRIX_H
 
 #include "matrix.h"
+#include "baseADT/array_sequence.h"
 
 template <class T>
 class TriangularMatrix : public Matrix<T> {
 private:
-  T* elements;
+  MutableArraySequence<T> elements;
   int size;
   T zero;
 
