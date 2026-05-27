@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "matrix.h"
 #include "complex.h"
+#include "quaternion.h"
 #include "baseADT/array_sequence.h"
 
 template <class T>
@@ -117,6 +118,10 @@ double matrix_norm_square(const T& value) {
 
 inline double matrix_norm_square(const Complex& value) {
   return value.get_real() * value.get_real() + value.get_imag() * value.get_imag();
+}
+
+inline double matrix_norm_square(const Quaternion& value) {
+  return value.norm_squared();
 }
 
 template <class T>

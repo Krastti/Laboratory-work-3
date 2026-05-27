@@ -3,6 +3,7 @@
 
 #include "vector.h"
 #include "complex.h"
+#include "quaternion.h"
 #include "baseADT/array_sequence.h"
 
 template <class T>
@@ -131,6 +132,10 @@ double vector_norm_square(const T& value) {
 
 inline double vector_norm_square(const Complex& value) {
   return value.get_real() * value.get_real() + value.get_imag() * value.get_imag();
+}
+
+inline double vector_norm_square(const Quaternion& value) {
+  return value.norm_squared();
 }
 
 template <class T>

@@ -8,6 +8,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(LaboratoryWork3
   main.cpp
+  src/quaternion.cpp
+  src/quaternion_io.cpp
 )
 
 target_include_directories(LaboratoryWork3 PRIVATE
@@ -16,6 +18,8 @@ target_include_directories(LaboratoryWork3 PRIVATE
 
 add_executable(LaboratoryWork3Tests
   tests/unit_tests.cpp
+  src/quaternion.cpp
+  src/quaternion_io.cpp
 )
 
 target_include_directories(LaboratoryWork3Tests PRIVATE

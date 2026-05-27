@@ -5,6 +5,7 @@
 
 #include "../include/vector.h"
 #include "../include/complex.h"
+#include "../include/quaternion.h"
 #include "../include/diagonal_matrix.h"
 #include "../include/rectangular_matrix.h"
 #include "../include/square_matrix.h"
@@ -19,6 +20,13 @@ void assert_close(double actual, double expected) {
 void assert_complex_equal(const Complex& actual, const Complex& expected) {
   assert_close(actual.get_real(), expected.get_real());
   assert_close(actual.get_imag(), expected.get_imag());
+}
+
+void assert_quaternion_equal(const Quaternion& actual, const Quaternion& expected) {
+  assert_close(actual.get_w(), expected.get_w());
+  assert_close(actual.get_x(), expected.get_x());
+  assert_close(actual.get_y(), expected.get_y());
+  assert_close(actual.get_z(), expected.get_z());
 }
 
 void assert_should_have_thrown() {
@@ -714,12 +722,56 @@ void test_diagonal_matrix_asserts() {
   }
 }
 
+void test_quaternion_asserts() {
+  Quaternion first(1.0, 2.0, 3.0, 4.0);
+  Quaternion second(5.0, 6.0, 7.0, 8.0);
+
+  assert_quaternion_equal(Quaternion::zero(), Quaternion(0.0, 0.0, 0.0, 0.0));
+  assert_quaternion_equal(Quaternion::identity(), Quaternion(1.0, 0.0, 0.0, 0.0));
+  assert_quaternion_equal(first + second, Quaternion(6.0, 8.0, 10.0, 12.0));
+  assert_quaternion_equal(second - first, Quaternion(4.0, 4.0, 4.0, 4.0));
+  assert_quaternion_equal(first * second, Quaternion(-60.0, 12.0, 30.0, 24.0));
+  assert_quaternion_equal(first * 2.0, Quaternion(2.0, 4.0, 6.0, 8.0));
+  assert_quaternion_equal(2.0 * first, Quaternion(2.0, 4.0, 6.0, 8.0));
+  assert_quaternion_equal(first.conjugate(), Quaternion(1.0, -2.0, -3.0, -4.0));
+  assert_close(first.norm_squared(), 30.0);
+  assert_close(first.norm(), std::sqrt(30.0));
+
+  Quaternion inverse = first.inverse();
+  assert_quaternion_equal(inverse, Quaternion(1.0 / 30.0, -2.0 / 30.0, -3.0 / 30.0, -4.0 / 30.0));
+  assert_quaternion_equal(first * inverse, Quaternion::identity());
+  assert_close(first.normalize().norm(), 1.0);
+  assert_quaternion_equal(Quaternion::zero().inverse(), Quaternion::zero());
+  assert_quaternion_equal(Quaternion::zero().normalize(), Quaternion::zero());
+}
+
+void test_quaternion_matrix_asserts() {
+  Quaternion items[] = {
+      Quaternion(1.0, 0.0, 1.0, 0.0),
+      Quaternion(2.0, 1.0, 0.0, 0.0),
+      Quaternion(0.0, 1.0, 0.0, 1.0),
+      Quaternion(3.0, 0.0, 0.0, 1.0)
+  };
+
+  SquareMatrix<Quaternion> matrix(items, 2);
+  SquareMatrix<Quaternion> sum = matrix + matrix;
+  SquareMatrix<Quaternion> multiplied = matrix * Quaternion::identity();
+
+  assert_quaternion_equal(sum.get(0, 0), Quaternion(2.0, 0.0, 2.0, 0.0));
+  assert_quaternion_equal(sum.get(1, 1), Quaternion(6.0, 0.0, 0.0, 2.0));
+  assert_quaternion_equal(multiplied.get(0, 1), items[1]);
+  assert_quaternion_equal(multiplied.get(1, 0), items[2]);
+  assert_close(matrix.norm(), std::sqrt(18.0));
+}
+
 void run_all_tests() {
   test_vector_asserts();
   test_square_matrix_asserts();
   test_rectangular_matrix_asserts();
   test_triangular_matrix_asserts();
   test_diagonal_matrix_asserts();
+  test_quaternion_asserts();
+  test_quaternion_matrix_asserts();
 }
 
 void print_test_menu() {
@@ -728,7 +780,9 @@ void print_test_menu() {
   std::cout << "3. Rectangular Matrix Tests\n";
   std::cout << "4. Triangular Matrix Tests\n";
   std::cout << "5. Diagonal Matrix Tests\n";
-  std::cout << "6. All Tests\n";
+  std::cout << "6. Quaternion Tests\n";
+  std::cout << "7. Quaternion Matrix Tests\n";
+  std::cout << "8. All Tests\n";
   std::cout << "0. Exit\n";
 }
 
@@ -766,6 +820,12 @@ int main() {
       test_diagonal_matrix_asserts();
       break;
     case 6:
+      test_quaternion_asserts();
+      break;
+    case 7:
+      test_quaternion_matrix_asserts();
+      break;
+    case 8:
       run_all_tests();
       break;
     case 0:
