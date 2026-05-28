@@ -1,5 +1,5 @@
-#include <stdexcept>
 #include "diagonal_matrix.h"
+#include <stdexcept>
 
 template <class T>
 void DiagonalMatrix<T>::check_count(int count) const {

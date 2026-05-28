@@ -1,6 +1,6 @@
-#include <stdexcept>
+#include "../baseADT/array_sequence.h"
 #include "rectangular_matrix.h"
-#include "baseADT/array_sequence.h"
+#include <stdexcept>
 
 template <class T>
 void RectangularMatrix<T>::check_size(int rows_count, int columns_count) const {

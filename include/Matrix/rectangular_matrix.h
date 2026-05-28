@@ -1,8 +1,8 @@
 #ifndef LABORATORYWORK3_RECTANGULAR_MATRIX_H
 #define LABORATORYWORK3_RECTANGULAR_MATRIX_H
 
+#include "../baseADT/array_sequence.h"
 #include "matrix.h"
-#include "baseADT/array_sequence.h"
 
 template <class T>
 class RectangularMatrix : public Matrix<T> {

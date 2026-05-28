@@ -1,9 +1,9 @@
 #ifndef LABORATORYWORK3_MATRIX_IO_H
 #define LABORATORYWORK3_MATRIX_IO_H
 
-#include <ostream>
+#include "../vector_io.h"
 #include "matrix.h"
-#include "vector_io.h"
+#include <ostream>
 
 template <class T>
 std::ostream& operator<<(std::ostream& out, const Matrix<T>& matrix) {

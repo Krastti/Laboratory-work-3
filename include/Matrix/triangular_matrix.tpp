@@ -1,5 +1,5 @@
-#include <stdexcept>
 #include "triangular_matrix.h"
+#include <stdexcept>
 
 template <class T>
 void TriangularMatrix<T>::check_size(int value) const {

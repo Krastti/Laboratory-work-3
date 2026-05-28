@@ -1,7 +1,7 @@
 #ifndef LABORATORYWORK3_MATRIX_H
 #define LABORATORYWORK3_MATRIX_H
 
-#include "vector.h"
+#include "../vector.h"
 
 template <class T>
 class Matrix {

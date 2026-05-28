@@ -1,9 +1,9 @@
+#include "../baseADT/array_sequence.h"
+#include "../complex.h"
+#include "../quaternion.h"
+#include "matrix.h"
 #include <cmath>
 #include <stdexcept>
-#include "matrix.h"
-#include "complex.h"
-#include "quaternion.h"
-#include "baseADT/array_sequence.h"
 
 template <class T>
 void Matrix<T>::check_row_index(int row) const {

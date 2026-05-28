@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "include/matrix_io.h"
+#include "include/Matrix/matrix_io.h"
 #include "include/quaternion.h"
 #include "include/quaternion_io.h"
-#include "include/rectangular_matrix.h"
-#include "include/square_matrix.h"
+#include "include/Matrix/rectangular_matrix.h"
+#include "include/Matrix/square_matrix.h"
 
 #ifdef _WIN32
 #include <windows.h>
