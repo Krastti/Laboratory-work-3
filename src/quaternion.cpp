@@ -58,15 +58,6 @@ double Quaternion::norm() const {
   return std::sqrt(norm_squared());
 }
 
-Quaternion Quaternion::inverse() const {
-  const double denominator = norm_squared();
-  if (denominator == 0.0) {
-    return zero();
-  }
-
-  return conjugate() * (1.0 / denominator);
-}
-
 Quaternion Quaternion::normalize() const {
   const double length = norm();
   if (length == 0.0) {
@@ -137,11 +128,6 @@ Quaternion operator*(Quaternion left, const Quaternion& right) {
 }
 
 Quaternion operator*(Quaternion quaternion, double scalar) {
-  quaternion *= scalar;
-  return quaternion;
-}
-
-Quaternion operator*(double scalar, Quaternion quaternion) {
   quaternion *= scalar;
   return quaternion;
 }

@@ -28,11 +28,7 @@ public:
   Quaternion conjugate() const;
   double norm_squared() const;
   double norm() const;
-  Quaternion inverse() const;
   Quaternion normalize() const;
-
-  Quaternion operator+() const;
-  Quaternion operator-() const;
 
   Quaternion& operator+=(const Quaternion& other);
   Quaternion& operator-=(const Quaternion& other);
@@ -46,7 +42,6 @@ Quaternion operator+(Quaternion left, const Quaternion& right);
 Quaternion operator-(Quaternion left, const Quaternion& right);
 Quaternion operator*(Quaternion left, const Quaternion& right);
 Quaternion operator*(Quaternion quaternion, double scalar);
-Quaternion operator*(double scalar, Quaternion quaternion);
 bool operator==(const Quaternion& left, const Quaternion& right);
 bool operator!=(const Quaternion& left, const Quaternion& right);
 
