@@ -1,8 +1,8 @@
 #ifndef LABORATORYWORK3_SOLVER_INTERFACE_H
 #define LABORATORYWORK3_SOLVER_INTERFACE_H
 
-#include "../../include/Matrix/square_matrix.h"
-#include "../../include/vector.h"
+#include "../Matrix/square_matrix.h"
+#include "../vector.h"
 
 class SolverInterface {
 private:
@@ -15,6 +15,11 @@ private:
    * Запускает сценарий ручного ввода и решения системы.
    */
   static void solve_manual_system();
+
+  /**
+   * Запускает сценарий генерации случайной СЛАУ с известным точным решением.
+   */
+  static void solve_random_system();
 
   /**
    * Считывает квадратную матрицу коэффициентов.

@@ -1,6 +1,7 @@
-#include "solver_interface.h"
+#include "../../include/Interface/solver_interface.h"
 
 #include "../../include/GaussSolver/lu_solver.h"
+#include "../../include/GaussSolver/matgen.h"
 #include "../../include/GaussSolver/solver.h"
 #include "../../include/Matrix/matrix_io.h"
 #include "../../include/baseADT/array_sequence.h"
@@ -20,6 +21,9 @@ void SolverInterface::run() {
       case 1:
         solve_manual_system();
         break;
+      case 2:
+        solve_random_system();
+        break;
       case 0:
         is_running = false;
         break;
@@ -38,6 +42,7 @@ void SolverInterface::run() {
 
 void SolverInterface::print_menu() {
   std::cout << "1. Ввести матрицу и решить СЛАУ\n";
+  std::cout << "2. Сгенерировать случайную СЛАУ\n";
   std::cout << "0. Выход\n\n";
 }
 
@@ -64,6 +69,41 @@ void SolverInterface::solve_manual_system() {
     std::cout << "Вектор свободных членов: " << free_terms << '\n';
     std::cout << "Решение: " << solution << '\n';
     std::cout << "Невязка: " << Solver::residual(coefficients, free_terms, solution) << '\n';
+  } catch (const std::exception& error) {
+    std::cout << "Ошибка: " << error.what() << '\n';
+  }
+}
+
+void SolverInterface::solve_random_system() {
+  try {
+    const int size = read_int("Введите размер квадратной матрицы: ");
+    if (size <= 0) {
+      std::cout << "Размер матрицы должен быть положительным.\n";
+      return;
+    }
+
+    const double low = read_double("Введите нижнюю границу случайных значений: ");
+    const double high = read_double("Введите верхнюю границу случайных значений: ");
+    const unsigned int seed = static_cast<unsigned int>(read_int("Введите seed генератора: "));
+
+    SquareMatrix<double> coefficients = Matgen::random_matrix(size, low, high, seed);
+    Vector<double> exact_solution = Matgen::random_vector(size, low, high, seed + 1u);
+    Vector<double> free_terms = Matgen::rhs_from_exact(coefficients, exact_solution);
+
+    std::cout << "\nДоступные солверы:\n";
+    std::cout << "1. Классический метод Гаусса\n";
+    std::cout << "2. Метод Гаусса с выбором ведущей строки\n";
+    std::cout << "3. LU-разложение\n";
+
+    const int solver_type = read_int("Выберите солвер: ");
+    Vector<double> solution = solve_system(coefficients, free_terms, solver_type);
+
+    std::cout << "\nСгенерированная матрица коэффициентов:\n" << coefficients;
+    std::cout << "Точное решение: " << exact_solution << '\n';
+    std::cout << "Вектор свободных членов: " << free_terms << '\n';
+    std::cout << "Найденное решение: " << solution << '\n';
+    std::cout << "Невязка: " << Solver::residual(coefficients, free_terms, solution) << '\n';
+    std::cout << "Относительная ошибка: " << Matgen::relative_error(solution, exact_solution) << '\n';
   } catch (const std::exception& error) {
     std::cout << "Ошибка: " << error.what() << '\n';
   }
