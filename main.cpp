@@ -1,4 +1,4 @@
-#include "interface/solver_interface.h"
+#include "include/Interface/solver_interface.h"
 
 #ifdef _WIN32
 #include <windows.h>
