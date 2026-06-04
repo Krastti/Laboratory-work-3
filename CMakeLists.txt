@@ -8,13 +8,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(LaboratoryWork3
   main.cpp
-  src/interface/solver_interface.cpp
+        src/interface/solver_interface.cpp
   src/GaussSolver/lu_solver.cpp
   src/GaussSolver/matgen.cpp
   src/GaussSolver/solver.cpp
   src/complex.cpp
   src/complex_io.cpp
   src/quaternion.cpp
+  src/quaternon_rotate.cpp
   src/quaternion_io.cpp
 )
 
@@ -31,6 +32,7 @@ add_executable(LaboratoryWork3Tests
     src/complex.cpp
     src/complex_io.cpp
     src/quaternion.cpp
+    src/quaternon_rotate.cpp
     src/quaternion_io.cpp
 )
 
@@ -47,6 +49,7 @@ add_executable(LaboratoryWork3Example
     src/complex.cpp
     src/complex_io.cpp
     src/quaternion.cpp
+    src/quaternon_rotate.cpp
     src/quaternion_io.cpp
 )
 

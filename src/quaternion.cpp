@@ -132,6 +132,11 @@ Quaternion operator*(Quaternion quaternion, double scalar) {
   return quaternion;
 }
 
+Quaternion operator*(double scalar, Quaternion quaternion) {
+  quaternion *= scalar;
+  return quaternion;
+}
+
 bool operator==(const Quaternion& left, const Quaternion& right) {
   return left.w == right.w && left.x == right.x && left.y == right.y && left.z == right.z;
 }
